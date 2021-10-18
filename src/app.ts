@@ -45,6 +45,21 @@ export const login = async () => {
     };
 };
 
+export const loginAccount = async () => {
+    const Kakao = await getKakaoSDK();
+    const exec = () => new Promise((success, fail) => Kakao.Auth.login({scope: '', success, fail}));
+    const output: any = (await exec()) || {};
+    return {
+        access_token: output?.access_token,
+        expires_in: output?.expires_in,
+        refresh_token: output?.refresh_token,
+        refresh_token_expires_in: output?.refresh_token_expires_in,
+        scopes: output?.scope?.split(' '),
+        token_type: output.token_type,
+    };
+};
+
+
 export const loginWithNewScopes = async (scopes: string[]) => {
     const Kakao = await getKakaoSDK();
     const scope = scopes?.join(',');
@@ -107,6 +122,7 @@ const app: KakaoSDK = {
     getAccessToken,
     getProfile,
     login,
+    loginAccount,
     loginWithNewScopes,
     logout,
     unlink,
